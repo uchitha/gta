@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -13,14 +11,12 @@ namespace GTA
 
         static void Main(string[] args)
         {
-            Startup();
-            Seeder.Seed();
-
-           _logger.LogInformation("Animals are now created. Press 'A' to start, any other key to exist");
+            SetUpInfrastructure();
+           _logger.LogInformation("Press any key to start, 'N' to exist");
 
             var key = Console.ReadKey();
             Console.Clear();
-            if (key.Key == ConsoleKey.A)
+            if (key.Key != ConsoleKey.N)
             {
                 Play();
             }
@@ -28,13 +24,7 @@ namespace GTA
             Console.ReadLine();
         }
 
-        private static void Play()
-        {
-            var game = _serviceProvider.GetService<IGame>();
-            game.Instruct();
-        }
-
-        private static void Startup()
+        private static void SetUpInfrastructure()
         {
             var services = new ServiceCollection();
             var start = new Startup();
@@ -49,6 +39,12 @@ namespace GTA
             _logger = _serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
         }
 
-       
+        private static void Play()
+        {
+            var game = _serviceProvider.GetService<IGame>();
+            game.Instruct();
+            game.StartPlay();
+        }
+
     }
 }

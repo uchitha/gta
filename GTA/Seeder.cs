@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GTA.Models;
 
 namespace GTA
 {
     public static class Seeder
     {
-        public static void Seed()
+        public static void Seed(GameContext db)
         {
-            using (var db = new GameContext())
-            {
-                CreateAnimals(db);
-                db.SaveChanges();
-            }
+            CreateAnimals(db);
+            db.SaveChanges();
+            
         }
 
         private static void CreateAnimals(GameContext db)
@@ -22,22 +18,27 @@ namespace GTA
             var shark = new Animal { Name = "shark" };
             var eagle = new Animal { Name = "eagle" };
             var lion = new Animal { Name = "lion" };
+            db.AddAnimals(cow, dog, shark, eagle, lion);
+            db.SaveChanges();
 
-            var mamalProperty = new AnimalProperty("Mamal", "Is it a mamal?", "Yes");
-            var birdProperty = new AnimalProperty("Bird", "Is it a bird?", "Yes");
-            var fishProperty = new AnimalProperty("Fish", "Is it a fish?", "Yes");
-            var domesticProperty = new AnimalProperty("Domestic", "Is it a domestic animal?", "Yes");
-            var farmProperty = new AnimalProperty("Farm", "Is it a farm animal?", "Yes");
-            var wildProperty = new AnimalProperty("Wild", "Is it a wild animal?", "Yes");
+            var mamalProperty = new Property("Mamal", "Is it a mamal?");
+            var birdProperty = new Property("Bird", "Is it a bird?");
+            var fishProperty = new Property("Fish", "Is it a fish?");
+            var domesticProperty = new Property("Domestic", "Is it a domestic animal?");
+            var farmProperty = new Property("Farm", "Is it a farm animal?");
+            var wildProperty = new Property("Wild", "Is it a wild animal?");
+            db.AddProperties(mamalProperty, birdProperty, fishProperty, domesticProperty, farmProperty, wildProperty);
+            db.SaveChanges();
 
-            cow.AddProperties(mamalProperty,farmProperty);
-            dog.AddProperties(mamalProperty,domesticProperty);
-            shark.AddProperties(fishProperty,wildProperty);
-            eagle.AddProperties(birdProperty,wildProperty);
-            lion.AddProperties(mamalProperty,wildProperty);
+            cow.AddProperties(mamalProperty, farmProperty);
+            dog.AddProperties(mamalProperty, domesticProperty);
+            shark.AddProperties(fishProperty, wildProperty);
+            eagle.AddProperties(birdProperty, wildProperty);
+            lion.AddProperties(mamalProperty, wildProperty);
+            //db.AddAnimalProperties(mamalProperty, birdProperty, fishProperty, domesticProperty, farmProperty, wildProperty);
+            db.SaveChanges();
 
-            db.AddAnimals(cow,dog,shark,eagle,lion);
-
+            
         }
 
 
